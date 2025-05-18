@@ -79,11 +79,10 @@ jobs:
         tags: |
           ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
           ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}
-          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:latest
 
   # Generate variant images with the IAR Build Tools for Arm (Linux)
   # *with* vendor-specific device support
-  arm-linux:
+  arm-linux-device:
     needs: [ arm-base-linux ]
     strategy:
       matrix:
@@ -121,3 +120,20 @@ jobs:
         # With this the image to be pushed will be tagged as
         # ghcr.io/<account>/<target>:<version>-<variant>
         tags: ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
+
+  # Finally pin -base to the top of the list, after windows (cosmetic fix)
+  arm-linux:
+    needs: [ arm-windows ]
+    strategy:
+      matrix:
+        target: [ arm ]
+        version: [ 9.60.4 ]
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Tag base as latest
+      run: |
+        docker pull ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}
+        docker tag  ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }} ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:latest
+        docker push ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}
+
+
