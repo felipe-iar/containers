@@ -4,7 +4,6 @@ FROM ubuntu:24.04
 # These variables should be populated if building images outside the GitHub Actions workflow
 ARG TARGET
 ARG VERSION
-ARG VARIANT
 
 # Container image description and details
 LABEL org.opencontainers.image.description="IAR Build Tools for ${TARGET} (CX)"

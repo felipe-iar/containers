@@ -39,10 +39,52 @@ jobs:
         docker push ghcr.io/${{ github.repository_owner }}/${target}:${version}-windows;
       shell: pwsh
 
+  # Generate the base image with the IAR Build tools for Arm (Linux)
+  # *without* vendor-specific device support (tagged as :latest)
+  arm-base-linux:
+    strategy:
+      matrix:
+        target: [ arm ]
+        version: [ 9.60.4 ]
+        variant:
+        - base
+        - minimal
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@main
+    - if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - if: matrix.variant == 'minimal'
+      uses: docker/build-push-action@v6
+      with:
+        file: ./.github/workflows/Dockerfile-${{ matrix.target }}.${{ matrix.variant }}
+        build-args: |
+          TARGET=${{ matrix.target }}
+          VERSION=${{ matrix.version }}
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: |
+          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
+    - if: matrix.variant == 'base'
+      uses: docker/build-push-action@v6
+      with:
+        file: ./.github/workflows/Dockerfile-${{ matrix.target }}.${{ matrix.variant }}
+        build-args: |
+          TARGET=${{ matrix.target }}
+          VERSION=${{ matrix.version }}
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: |
+          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
+          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}
+          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:latest
+
   # Generate variant images with the IAR Build Tools for Arm (Linux)
   # *with* vendor-specific device support
   arm-linux:
-    needs: [ arm-windows ]
+    needs: [ arm-base-linux ]
     strategy:
       matrix:
         target: [ arm ]
@@ -79,66 +121,3 @@ jobs:
         # With this the image to be pushed will be tagged as
         # ghcr.io/<account>/<target>:<version>-<variant>
         tags: ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
-
-  # Generate the minimal image with the IAR Build tools for Arm (Linux)
-  arm-minimal-linux:
-    needs: [ arm-windows ]
-    strategy:
-      matrix:
-        target: [ arm ]
-        version: [ 9.60.4 ]
-        variant:
-        - minimal
-    runs-on: ubuntu-24.04
-    steps:
-    - uses: actions/checkout@main
-    - if: github.event_name != 'pull_request'
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - if: matrix.variant == 'base'
-      uses: docker/build-push-action@v6
-      with:
-        file: ./.github/workflows/Dockerfile-${{ matrix.target }}.${{ matrix.variant }}
-        build-args: |
-          TARGET=${{ matrix.target }}
-          VERSION=${{ matrix.version }}
-          VARIANT=${{ matrix.variant }}
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: |
-          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
-
-  # Finally, generate the base image with the IAR Build tools for Arm (Linux)
-  # *without* vendor-specific device support (tagged as :latest)
-  arm-base-linux:
-    needs: [ arm-linux ]
-    strategy:
-      matrix:
-        target: [ arm ]
-        version: [ 9.60.4 ]
-        variant:
-        - base
-    runs-on: ubuntu-24.04
-    steps:
-    - uses: actions/checkout@main
-    - if: github.event_name != 'pull_request'
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - if: matrix.variant == 'base'
-      uses: docker/build-push-action@v6
-      with:
-        file: ./.github/workflows/Dockerfile-${{ matrix.target }}
-        build-args: |
-          TARGET=${{ matrix.target }}
-          VERSION=${{ matrix.version }}
-          VARIANT=${{ matrix.variant }}
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: |
-          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
-          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}
-          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:latest
