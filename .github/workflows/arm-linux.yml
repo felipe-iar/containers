@@ -140,7 +140,7 @@ jobs:
         docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
 
   # Create a manifest for -minimal and -base for the last, so that they appear at the top of the list
-  arm-multi-base:
+  arm-manifest-base:
     needs: [ arm-multi-arch ]
     strategy:
       matrix:
@@ -174,8 +174,8 @@ jobs:
         docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-base
 
 # Finalize manifest        
-  arm-manifest-finalize:
-    needs: [ arm-multi-base ]
+  arm-manifest-latest:
+    needs: [ arm-manifest-base ]
     strategy:
       matrix:
         target: [ arm ]
@@ -189,10 +189,12 @@ jobs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Regenerate manifest for latest
+    - name: Push manifest for :latest
       run: |
         docker manifest create ${{ matrix.registry-repo }}/${{ matrix.target }}:latest \
-          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-base
-    - name: Push the manifest
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-linux-base \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-windows-2022-base \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-windows-2025-base
+    - name: Push manifest for :latest
       run: |
         docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:latest
