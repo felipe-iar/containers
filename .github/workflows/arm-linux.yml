@@ -139,9 +139,43 @@ jobs:
           ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-windows-2025-${{ matrix.variant }}
         docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
 
+  # Create a manifest for -minimal and -base for the last, so that they appear at the top of the list
+  arm-multi-base:
+    needs: [ arm-multi-arch ]
+    strategy:
+      matrix:
+        target: [ arm ]
+        version: [ 9.70.1, 9.60.4 ]
+        registry-repo: [ "ghcr.io/${{ github.repository_owner }}" ]
+        variant:
+        - minimal
+        - base
+    runs-on: ubuntu-24.04
+    steps:
+    - if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Push manifest for -minimal
+      run: |
+        docker manifest create ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-minimal \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-linux-minimal \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-windows-2022-minimal \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-windows-2025-minimal
+        docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-minimal
+    - name: Push manifest for -base
+      run: |
+        docker manifest create ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-base \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-linux-base \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-windows-2022-base \
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-windows-2025-base
+        docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-base
+
 # Finalize manifest        
   arm-manifest-finalize:
-    needs: [ arm-multi-arch]
+    needs: [ arm-multi-base ]
     strategy:
       matrix:
         target: [ arm ]
@@ -158,9 +192,7 @@ jobs:
     - name: Regenerate manifest for latest
       run: |
         docker manifest create ${{ matrix.registry-repo }}/${{ matrix.target }}:latest \
-          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-linux-base \
-          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-windows-2022-base \
-          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-windows-2025-base
+          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.latest }}-base
     - name: Push the manifest
       run: |
         docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:latest
