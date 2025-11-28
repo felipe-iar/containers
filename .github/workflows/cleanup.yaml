@@ -1,0 +1,23 @@
+name: cleanup
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 4 1 * *'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  arm-containers:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        target: [ arm, riscv, rl78, rx ]
+    steps:
+    - name: Cleanup dangling images
+      run: |
+        for dangling in $(gh api -X GET /orgs/iarsystems/packages/container/${{ matrix.target }}/versions --paginate | jq -r '.[] | select(.metadata.container.tags==[]) | .id'); do
+          gh api -X DELETE /orgs/iarsystems/packages/container/${{ matrix.target }}/versions/$dangling;
+        done
