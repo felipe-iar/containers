@@ -37,7 +37,7 @@ RUN wget -q https://netstorage.iar.com/FileStore/STANDARD/001/003/${LMSC_TAG}/ia
 && dpkg -i iar-lmsc-tools_${LMSC_VERSION}_amd64.deb \
 && wget -qO- "https://github.com/iarsystems/${TARGET}/releases/download/${VERSION}/cx${TARGET}-${VERSION}-linux-x86_64-minimal.tar.bz2" | tar -I lbzip2 -x -C '/opt/iar' \
 && rm -f /opt/iar/cx${TARGET}-${VERSION}/common/bin/lmsc-daemon \
-&& wget -qO- 'https://github.com/Kitware/CMake/releases/download/v4.1.2/cmake-4.1.2-linux-x86_64.tar.gz' | tar --strip-components=1 -xz -C '/usr/local' \
+&& wget -qO- 'https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-linux-x86_64.tar.gz' | tar --strip-components=1 -xz -C '/usr/local' \
 && cd /opt/iar \
 && ln -s cx${TARGET}-${VERSION} cx${TARGET}
 
