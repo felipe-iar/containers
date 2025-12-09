@@ -19,7 +19,7 @@ jobs:
       matrix:
         target: [ rh850 ]
         cfg:
-        - { version: 3.20.1, target-tag: 084, lmsc-version: 1.9, lmsc-tag: 984 }
+        - { version: 3.20.1, target-tag: '084', lmsc-version: 1.9, lmsc-tag: 984 }
     runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@main
