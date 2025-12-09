@@ -18,7 +18,7 @@ jobs:
       matrix:
         target: [ rh850 ]
         cfg:
-        - { version: 3.20.1, build: 2142, target-tag: 083 }
+        - { version: 3.20.1, build: 2142, target-tag: '083' }
         os: [ 2022, 2025 ]
     runs-on: windows-${{ matrix.os }}
     steps:
