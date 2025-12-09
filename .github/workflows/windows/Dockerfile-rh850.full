@@ -36,8 +36,6 @@ Start-Process -FilePath "C:/vc_redist.x64.exe" -ArgumentList "/install", "/quiet
 Remove-Item "vc_redist.x64.exe";
 # Install the IAR Build Tools
 RUN \
-${STRIPDOTVERSION}="${env:VERSION}" -replace '\.',''; \
-${TARGETUPPER}=${env:TARGET}.ToUpper(); \
 Invoke-WebRequest -Uri "https://netstorage.iar.com/FileStore/STANDARD/001/004/${env:TARGET_TAG}/cx${env:TARGET}-${env:VERSION}.${env:BUILD_VER}.exe" -OutFile "cx${env:TARGET}-${env:VERSION}.exe"; \
 Start-Process -FilePath "cx${env:TARGET}-${env:VERSION}.exe" -ArgumentList "/hide_usd","/autoinstall" -wait; \
 Remove-Item "cx${env:TARGET}-${env:VERSION}.exe";
