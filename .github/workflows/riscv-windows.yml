@@ -25,6 +25,17 @@ jobs:
         os: [ 2022, 2025 ]
     runs-on: windows-${{ matrix.os }}
     steps:
+    # https://github.com/actions/runner-images/issues/13729
+    - name: Ensure Docker is running (Windows)
+      shell: pwsh
+      run: |
+        Start-Service docker
+        for ($i = 0; $i -lt 30; $i++) {
+          docker info *> $null
+          if ($LASTEXITCODE -eq 0) { exit 0 }
+          Start-Sleep 2
+        }
+        docker info
     - uses: actions/checkout@main
     - if: github.event_name != 'pull_request'
       uses: docker/login-action@v4
