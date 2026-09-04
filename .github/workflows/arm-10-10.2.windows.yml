@@ -1,4 +1,4 @@
-name: arm-windows
+name: arm-10.10.2-windows
 
 on:
   # Workflow dispatched manually
