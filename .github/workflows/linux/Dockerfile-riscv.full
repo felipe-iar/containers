@@ -32,7 +32,7 @@ git \
 && rm -rf /var/lib/apt/lists/*
 
 # Install IAR Build Tools and CMake
-RUN wget -q $(wget -qO- "https://updates.iar.com/?product=LMSCDAEMON" | grep -Po '(?<=href=")[^"]*(?=")' | grep -i '^https://.*deb') \
+RUN curl -s "https://updates.iar.com/?product=LMSCDAEMON" | grep -Po '(?<=href=")[^"]*(?=")' | grep -i '^https://.*exe' | xargs -I {} curl -sO {} \
 && dpkg -i iar-lmsc-tools_*_amd64.deb \
 && wget -q https://netstorage.iar.com/FileStore/STANDARD/001/003/${TARGET_TAG}/cx${TARGET}-${VERSION}.deb \
 && dpkg -i cx${TARGET}-${VERSION}.deb \

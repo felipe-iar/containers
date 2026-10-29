@@ -31,7 +31,7 @@ git \
 && rm -rf /var/lib/apt/lists/*
 
 # Intall LSMC, IAR Build Tools and CMake
-RUN wget -q $(wget -qO- "https://updates.iar.com/?product=LMSCDAEMON" | grep -Po '(?<=href=")[^"]*(?=")' | grep -i '^https://.*deb') \
+RUN curl -s "https://updates.iar.com/?product=LMSCDAEMON" | grep -Po '(?<=href=")[^"]*(?=")' | grep -i '^https://.*exe' | xargs -I {} curl -sO {} \
 && dpkg -i iar-lmsc-tools_*_amd64.deb \
 && wget -qO- "https://github.com/iarsystems/${TARGET}/releases/download/${VERSION}/cx${TARGET}-${VERSION}-linux-x86_64-minimal.tar.bz2" | tar -I lbzip2 -x -C '/opt/iar' \
 && rm -f /opt/iar/cx${TARGET}-${VERSION}/common/bin/lmsc-daemon \
