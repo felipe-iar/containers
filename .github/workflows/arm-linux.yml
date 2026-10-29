@@ -19,10 +19,10 @@ jobs:
       matrix:
         target: [ arm ]
         cfg:
-        - { version: 9.70.4, lmsc-version: 1.11, lmsc-tag: 123 }
-        - { version: 9.70.2, lmsc-version: 1.11, lmsc-tag: 123 }
-        - { version: 9.70.1, lmsc-version: 1.11, lmsc-tag: 123 }
-        - { version: 9.60.4, lmsc-version: 1.11, lmsc-tag: 123 }
+        - { version: 9.70.4 }
+        - { version: 9.70.2 }
+        - { version: 9.70.1 }
+        - { version: 9.60.4 }
       fail-fast: false
     runs-on: ubuntu-24.04
     steps:
@@ -39,8 +39,6 @@ jobs:
         build-args: |
           TARGET=${{ matrix.target }}
           VERSION=${{ matrix.cfg.version }}
-          LMSC_VERSION=${{ matrix.cfg.lmsc-version }}
-          LMSC_TAG=${{ matrix.cfg.lmsc-tag }}
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
           ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.cfg.version }}-linux-minimal
