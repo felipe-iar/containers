@@ -1,8 +1,8 @@
 # These variables should be populated if building images outside the GitHub Actions workflow
-ARG TARGET
-ARG VERSION
-ARG VARIANT
-ARG REGISTRY_REPO
+ARG TARGET=arm
+ARG VERSION=""
+ARG VARIANT=""
+ARG REGISTRY_REPO=""
 
 # Re-use base image as base layer
 FROM ${REGISTRY_REPO}/${TARGET}:${VERSION}-linux-base
