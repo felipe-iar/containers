@@ -38,7 +38,8 @@ RUN curl -s "https://updates.iar.com/?product=LMSCDAEMON" | grep -Po '(?<=href="
 && dpkg -i iar-lmsc-tools_*_amd64.deb \
 && rm iar-lmsc-tools_*_amd64.deb \
 && wget -qO- "https://github.com/iarsystems/${TARGET}/releases/download/${VERSION}/cx${TARGET}-${VERSION}-linux-x86_64-minimal.tar.bz2" | tar -I lbzip2 -x -C '/opt/iar' \
-&& rm -f /opt/iar/cx${TARGET}-${VERSION}/common/bin/lmsc-daemon \
+&& ln -sr /opt/iar/cx${TARGET}-${VERSION} /opt/iar/cx${TARGET} \
+&& rm -f /opt/iar/cx${TARGET}/common/bin/lmsc-daemon \
 && ln -sr /opt/iar/cx${TARGET}{-${VERSION},} \
 && wget -qO- https://github.com/kitware/cmake/releases/download/$(curl -s https://api.github.com/repos/kitware/cmake/releases/latest \
    | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')/cmake-$(curl -s https://api.github.com/repos/kitware/cmake/releases/latest \
