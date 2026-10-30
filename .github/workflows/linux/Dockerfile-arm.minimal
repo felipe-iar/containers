@@ -41,7 +41,7 @@ RUN curl -s "https://updates.iar.com/?product=LMSCDAEMON" | grep -Po '(?<=href="
 && ln -sr /opt/iar/cx${TARGET}{,-${VERSION}} \
 && wget -qO- https://github.com/kitware/cmake/releases/download/$(curl -s https://api.github.com/repos/kitware/cmake/releases/latest \
    | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')/cmake-$(curl -s https://api.github.com/repos/kitware/cmake/releases/latest \
-   | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')-linux-x86_64.sh | tar --strip-components=1 -xz -C '/usr/local'
+   | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')-linux-x86_64.tar.gz | tar --strip-components=1 -xz -C '/usr/local'
 
 # Set the default work directory to ${HOME}
 WORKDIR ${HOME}
