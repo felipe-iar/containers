@@ -1,7 +1,7 @@
 # These variables should be populated if building images outside the GitHub Actions workflow
 ARG TARGET=arm
 ARG VERSION=10.10.2
-ARG REGISTRY_REPO=""
+ARG REGISTRY_REPO="docker.io/library"
 
 # Re-use minimal image as base layer
 FROM ${REGISTRY_REPO}/${TARGET}:${VERSION}-linux-minimal

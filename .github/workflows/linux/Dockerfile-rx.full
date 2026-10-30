@@ -2,8 +2,8 @@
 FROM ubuntu:24.04
 
 # These variables should be populated if building images outside the GitHub Actions workflow
-ARG TARGET
-ARG VERSION
+ARG TARGET=rx
+ARG VERSION=5.20.1
 
 # Container image description and details
 LABEL org.opencontainers.image.description="IAR Build Tools for ${TARGET} (CX)"
