@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   # The -minimal image can be fetched faster for simple tasks
-  arm-minimal:
+  minimal:
     strategy:
       matrix:
         target: [ arm ]
@@ -43,8 +43,8 @@ jobs:
   # Generate the -base image with the IAR Build tools for Arm.
   # It includes: -minimal, `cspybat`, `iarbuild` and `cstat`.
   # It does not include: vendor-specific device support
-  arm-base:
-    needs: [ arm-minimal ]
+  base:
+    needs: [ minimal ]
     strategy:
       matrix:
         target: [ arm ]
@@ -72,8 +72,8 @@ jobs:
             
   # Generate variant images with the IAR Build Tools for Arm
   # *including* vendor-specific device support
-  arm-device:
-    needs: [ arm-base ]
+  device:
+    needs: [ base ]
     strategy:
       matrix:
         target: [ arm ]
@@ -109,8 +109,8 @@ jobs:
         tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.cfg.version }}-linux-${{ matrix.variant }}
 
   # Regenerate the Docker manifest so that we get the multi-arch image
-  arm-multi-arch:
-    needs: [ arm-device ]
+  multi-arch:
+    needs: [ device ]
     strategy:
       matrix:
         target: [ arm ]
@@ -144,9 +144,9 @@ jobs:
       run: |
         docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
 
-# Finalize manifest        
-  arm-manifest-finalize:
-    needs: [ arm-multi-arch ] 
+  # Finalize manifest        
+  finalize:
+    needs: [ multi-arch ] 
     strategy:
       matrix:
         target: [ arm ]
