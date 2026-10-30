@@ -27,6 +27,7 @@ RUN apt-get update \
 ca-certificates \
 curl \
 git \
+lbzip2 \
 libusb-1.0-0 \
 wget \
 && rm -rf /var/lib/apt/lists/*
