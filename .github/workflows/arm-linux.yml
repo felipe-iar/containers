@@ -81,10 +81,10 @@ jobs:
       matrix:
         target: [ arm ]
         cfg:
-        - { version: 9.70.4, timestamp: 20260226111516 }
-        - { version: 9.70.2, timestamp: 20251103173334 }
-        - { version: 9.70.1, timestamp: 20250625133953 }
-        - { version: 9.60.4, timestamp: 20250303090915 }
+        - { version: 9.70.4 }
+        - { version: 9.70.2 }
+        - { version: 9.70.1 }
+        - { version: 9.60.4 }
         variant:
         - additional
         - microchip
@@ -110,7 +110,6 @@ jobs:
           TARGET=${{ matrix.target }}
           VERSION=${{ matrix.cfg.version }}
           VARIANT=${{ matrix.variant }}
-          TIMESTAMP=${{ matrix.cfg.timestamp }}
           REGISTRY_REPO=ghcr.io/${{ github.repository_owner }}
         push: ${{ github.event_name != 'pull_request' }}
         tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.cfg.version }}-linux-${{ matrix.variant }}
