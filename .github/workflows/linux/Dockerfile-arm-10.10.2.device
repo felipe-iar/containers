@@ -14,5 +14,5 @@ ARG VARIANT
 
 # Intall Device support
 RUN wget -qO- $(curl -s https://api.github.com/repos/iarsystems/${TARGET}/releases/tags/${VERSION} \
-    | jq -r '.assets[] | select(.name | test("device-support-${VARIANT}")) | .browser_download_url' | grep .bz2$) \
+    | jq -r --arg PAT "device-support-${VARIANT}.*\\.bz2" '.assets[] | select(.name | test("device-support-${VARIANT}")) | .browser_download_url') \
     | tar -I lbzip2 -x -C '/opt/iar'
