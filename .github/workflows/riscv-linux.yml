@@ -21,8 +21,8 @@ jobs:
       matrix:
         target: [ riscv ]
         cfg:
-        - { version: 3.40.2, target-tag: 971 }
-        - { version: 3.40.1, target-tag: 609 }
+        - { version: 3.40.2 }
+        - { version: 3.40.1 }
     runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@main
@@ -38,7 +38,6 @@ jobs:
         build-args: |
           TARGET=${{ matrix.target }}
           VERSION=${{ matrix.cfg.version }}
-          TARGET_TAG=${{ matrix.cfg.target-tag }}
           REGISTRY_REPO=ghcr.io/${{ github.repository_owner }}
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
