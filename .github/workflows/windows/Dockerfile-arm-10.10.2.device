@@ -1,5 +1,4 @@
 # These variables should be populated if building images outside the GitHub Actions workflow
-ARG TARGET
 ARG VERSION
 ARG VARIANT
 ARG TIMESTAMP
@@ -7,10 +6,9 @@ ARG REGISTRY_REPO
 ARG WINVER
 
 # Re-use base image as base layer
-FROM ${REGISTRY_REPO}/${TARGET}:${VERSION}-windows-${WINVER}-base
+FROM ${REGISTRY_REPO}/arm:${VERSION}-windows-${WINVER}-base
 
 # Reuse previous arguments in this stage
-ARG TARGET
 ARG VERSION
 ARG VARIANT
 ARG TIMESTAMP

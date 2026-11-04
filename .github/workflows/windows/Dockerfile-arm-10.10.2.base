@@ -10,8 +10,8 @@ FROM mcr.microsoft.com/windows/servercore:ltsc${WINVER}
 ARG TARGET
 ARG VERSION
 
-LABEL org.opencontainers.image.description="IAR Build Tools for ${TARGET} (CX)"
-LABEL org.opencontainers.image.ref_name="cx${TARGET}"
+LABEL org.opencontainers.image.description="IAR Build Tools for Arm (CX)"
+LABEL org.opencontainers.image.ref_name="cxarm"
 LABEL org.opencontainers.image.source="https://iar.com"
 LABEL org.opencontainers.image.vendor="IAR Systems AB"
 LABEL org.opencontainers.image.version=${VERSION}
@@ -34,7 +34,7 @@ RUN Invoke-WebRequest -Uri "https://github.com/iarsystems/${env:TARGET}/releases
 Expand-Archive "cxarm.zip" -DestinationPath "C:/iar";
 # Remove-Item "vc_redist.x64.exe", "*.zip";
 
-ENV PATH="C:\Windows;C:\Windows\System32;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\iar\cx${TARGET}-${VERSION}\${TARGET}\bin;C:\iar\cx${TARGET}-${VERSION}\common\bin;C:\cmake-4.2.0-windows-x86_64\bin;C:\git\cmd"
+ENV PATH="C:\Windows;C:\Windows\System32;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\iar\cxarm-${VERSION}\arm\bin;C:\iar\cxarm-${VERSION}\common\bin;C:\cmake-4.2.0-windows-x86_64\bin;C:\git\cmd"
 
 # Set the work directory
 WORKDIR "C:/workdir"

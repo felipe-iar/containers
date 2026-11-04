@@ -1,5 +1,4 @@
 # These variables should be populated if building images outside the GitHub Actions workflow
-ARG TARGET
 ARG TARGET_TAG
 ARG VERSION
 ARG WINVER
@@ -8,12 +7,11 @@ ARG WINVER
 FROM mcr.microsoft.com/windows/servercore:ltsc${WINVER}
 
 # Forward the ARGs to the current stage
-ARG TARGET
 ARG TARGET_TAG
 ARG VERSION
 
-LABEL org.opencontainers.image.description="IAR Build Tools for ${TARGET} (CX)"
-LABEL org.opencontainers.image.ref_name="cx${TARGET}"
+LABEL org.opencontainers.image.description="IAR Build Tools for Renesas RH850 (CX)"
+LABEL org.opencontainers.image.ref_name="cxrh850"
 LABEL org.opencontainers.image.source="https://iar.com"
 LABEL org.opencontainers.image.vendor="IAR Systems AB"
 LABEL org.opencontainers.image.version=${VERSION}
@@ -35,10 +33,9 @@ Remove-Item "vc_redist.x64.exe";
 # Install the IAR Build Tools
 RUN \
 ${STRIPDOTVERSION}="${env:VERSION}" -replace '\.',''; \
-${TARGETUPPER}=${env:TARGET}.ToUpper(); \
-Invoke-WebRequest -Uri "https://netstorage.iar.com/FileStore/STANDARD/001/003/${env:TARGET_TAG}/CX${TARGETUPPER}-${STRIPDOTVERSION}.exe" -OutFile "cx${env:TARGET}-${env:VERSION}.exe"; \
-Start-Process -FilePath "cx${env:TARGET}-${env:VERSION}.exe" -ArgumentList "/hide_usd","/autoinstall" -wait; \
-Remove-Item "cx${env:TARGET}-${env:VERSION}.exe";
+Invoke-WebRequest -Uri "https://netstorage.iar.com/FileStore/STANDARD/001/003/${env:TARGET_TAG}/CX$RISCV-${STRIPDOTVERSION}.exe" -OutFile "cxriscv-${env:VERSION}.exe"; \
+Start-Process -FilePath "cxriscv-${env:VERSION}.exe" -ArgumentList "/hide_usd","/autoinstall" -wait; \
+Remove-Item "cxriscv-${env:VERSION}.exe";
 
 ENV PATH="C:\Windows;C:\Windows\System32;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\iar\cx${TARGET}-${VERSION}\\${TARGET}\\bin;C:\iar\cx${TARGET}-${VERSION}\common\bin;C:\cmake-4.2.0-windows-x86_64\bin;C:\git\cmd"
 
