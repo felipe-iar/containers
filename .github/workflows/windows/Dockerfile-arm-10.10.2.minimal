@@ -16,33 +16,33 @@ LABEL org.opencontainers.image.version=${VERSION}
 SHELL ["powershell.exe", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # Install Latest CMake
-RUN \
-$latestCMake = Invoke-RestMethod -Uri "https://api.github.com/repos/kitware/cmake/releases/latest"; \
-$downloadURL = ($latestCMake.assets | Where-Object { $_.name -like "cmake-*-windows-x86_64.zip" }).browser_download_url; \
-$fileName = ($latestCmake.assets | Where-Object { $_.name -like "cmake-*-windows-x86_64.zip" }).name; \
-$fileBase = (Split-Path $fileName -leafBase); \
-Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; \
-Expand-Archive "$fileName" -DestinationPath "C:/Tools"; \
+RUN `
+$latestCMake = Invoke-RestMethod -Uri "https://api.github.com/repos/kitware/cmake/releases/latest"; `
+$downloadURL = ($latestCMake.assets | Where-Object { $_.name -like "cmake-*-windows-x86_64.zip" }).browser_download_url; `
+$fileName = ($latestCmake.assets | Where-Object { $_.name -like "cmake-*-windows-x86_64.zip" }).name; `
+$fileBase = (Split-Path $fileName -leafBase); `
+Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
+Expand-Archive "$fileName" -DestinationPath "C:/Tools"; `
 Add-Content -Path "C:/Tools/_path-cmake.txt" -NoNewLine -Value "C:\",$fileBase,"\bin"
 
 # Install Latest Git
-RUN \
-$latestGit4W = Invoke-RestMethod -Uri "https://api.github.com/repos/git-for-windows/git/releases/latest"; \
-$downloadURL = ($latestGit4W.assets | Where-Object { $_.name -like "MinGit-*-busybox-64-bit.zip" }).browser_download_url; \
-$fileName = ($latestGit4W.assets | Where-Object { $_.name -like "MinGit-*-busybox-64-bit.zip" }).name; \
-$fileBase = (Split-Path $fileName -leafBase); \
-Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; \
-Expand-Archive "$fileName" -DestinationPath "C:/Tools/$fileBase"; \
+RUN `
+$latestGit4W = Invoke-RestMethod -Uri "https://api.github.com/repos/git-for-windows/git/releases/latest"; `
+$downloadURL = ($latestGit4W.assets | Where-Object { $_.name -like "MinGit-*-busybox-64-bit.zip" }).browser_download_url; `
+$fileName = ($latestGit4W.assets | Where-Object { $_.name -like "MinGit-*-busybox-64-bit.zip" }).name; `
+$fileBase = (Split-Path $fileName -leafBase); `
+Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
+Expand-Archive "$fileName" -DestinationPath "C:/Tools/$fileBase"; `
 Add-Content -Path "C:/Tools/_path-git.txt" -NoNewLine -Value "C:\",$fileBase,"\cmd"
 
 # Install Latest Ninja
-RUN \
-$latestNinja = Invoke-RestMethod -Uri "https://api.github.com/repos/ninja-build/ninja/releases/latest"; \
-$downloadURL = ($latestNinja.assets | Where-Object { $_.name -eq "ninja-win.zip" }).browser_download_url; \
-$fileName = ($latestNinja.assets | Where-Object { $_.name -eq "ninja-win.zip" }).name; \
-$fileBase = (Split-Path $fileName -leafBase); \
-Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; \
-Expand-Archive "$fileName" -DestinationPath "C:/Tools/$fileBase"; \
+RUN `
+$latestNinja = Invoke-RestMethod -Uri "https://api.github.com/repos/ninja-build/ninja/releases/latest"; `
+$downloadURL = ($latestNinja.assets | Where-Object { $_.name -eq "ninja-win.zip" }).browser_download_url; `
+$fileName = ($latestNinja.assets | Where-Object { $_.name -eq "ninja-win.zip" }).name; `
+$fileBase = (Split-Path $fileName -leafBase); `
+Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
+Expand-Archive "$fileName" -DestinationPath "C:/Tools/$fileBase"; `
 Add-Content -Path "C:/Tools/_path-ninja.txt" -NoNewLine -Value "C:\",$fileBase
 
 # Install the IAR Build Tools
@@ -51,12 +51,12 @@ RUN Expand-Archive "cxarm.zip" -DestinationPath "C:/Tools/iar"; \
 Add-Content -Path "C:/Tools/_path-ibt.txt" -NoNewLine -Value "C:\iar\cxarm-${VERSION}\arm\bin;C:\iar\cxarm-${VERSION}\common\bin"
 
 # Install the IAR LMSC Tools
-RUN \
-$re = [regex]::new('href="(https://[^"]*\.exe)"'); \
-$latestLMSC = $re.Match((Invoke-WebRequest "https://updates.iar.com/?product=LMSCDAEMON").Content).Groups[1].Value; \
-$fileName = (Split-Path $latestLMSC -Leaf); \
-Invoke-WebRequest -Uri $latestLMSC -OutFile $fileName; \
-Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT,"/SUPPRESSMSGBOXES","/DIR=C:/Tools/iar" -wait; \
+RUN `
+$re = [regex]::new('href="(https://[^"]*\.exe)"'); `
+$latestLMSC = $re.Match((Invoke-WebRequest "https://updates.iar.com/?product=LMSCDAEMON").Content).Groups[1].Value; `
+$fileName = (Split-Path $latestLMSC -Leaf); `
+Invoke-WebRequest -Uri $latestLMSC -OutFile $fileName; `
+Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT,"/SUPPRESSMSGBOXES","/DIR=C:/Tools/iar" -wait; `
 Add-Content -Path "C:/Tools/_path-lmsc.txt" -NoNewLine -Value "C:\iar\lmsc"
 
 
