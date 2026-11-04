@@ -17,7 +17,6 @@ jobs:
   minimal:
     strategy:
       matrix:
-        target: [ arm ]
         cfg:
         - { version: 9.70.4 }
         - { version: 9.70.2 }
@@ -35,13 +34,12 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - uses: docker/build-push-action@v7
       with:
-        file: ./.github/workflows/linux/Dockerfile-${{ matrix.target }}.minimal
+        file: ./.github/workflows/linux/Dockerfile-arm.minimal
         build-args: |
-          TARGET=${{ matrix.target }}
           VERSION=${{ matrix.cfg.version }}
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.cfg.version }}-linux-minimal
+          ghcr.io/${{ github.repository_owner }}/arm:${{ matrix.cfg.version }}-linux-minimal
 
   # Generate the -base image with the IAR Build tools for Arm.
   # It includes: -minimal, `cspybat`, `iarbuild` and `cstat`.
@@ -50,7 +48,6 @@ jobs:
     needs: [ minimal ]
     strategy:
       matrix:
-        target: [ arm ]
         version: [ 9.70.4, 9.70.2, 9.70.1, 9.60.4 ]
       fail-fast: false
     runs-on: ubuntu-24.04
@@ -64,14 +61,13 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - uses: docker/build-push-action@v7
       with:
-        file: ./.github/workflows/linux/Dockerfile-${{ matrix.target }}.base
+        file: ./.github/workflows/linux/Dockerfile-arm.base
         build-args: |
-          TARGET=${{ matrix.target }}
           VERSION=${{ matrix.version }}
           REGISTRY_REPO=ghcr.io/${{ github.repository_owner }}
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.version }}-linux-base
+          ghcr.io/${{ github.repository_owner }}/arm:${{ matrix.version }}-linux-base
             
   # Generate variant images with the IAR Build Tools for Arm
   # *including* vendor-specific device support
@@ -79,7 +75,6 @@ jobs:
     needs: [ base ]
     strategy:
       matrix:
-        target: [ arm ]
         cfg:
         - { version: 9.70.4 }
         - { version: 9.70.2 }
@@ -105,21 +100,19 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - uses: docker/build-push-action@v7
       with:
-        file: ./.github/workflows/linux/Dockerfile-${{ matrix.target }}.device
+        file: ./.github/workflows/linux/Dockerfile-arm.device
         build-args: |
-          TARGET=${{ matrix.target }}
           VERSION=${{ matrix.cfg.version }}
           VARIANT=${{ matrix.variant }}
           REGISTRY_REPO=ghcr.io/${{ github.repository_owner }}
         push: ${{ github.event_name != 'pull_request' }}
-        tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ matrix.cfg.version }}-linux-${{ matrix.variant }}
+        tags: ghcr.io/${{ github.repository_owner }}/arm:${{ matrix.cfg.version }}-linux-${{ matrix.variant }}
 
   # Regenerate the Docker manifest so that we get the multi-arch image
   multi-arch:
     needs: [ device ]
     strategy:
       matrix:
-        target: [ arm ]
         version: [ 9.70.4, 9.70.2, 9.70.1, 9.60.4 ]
         registry-repo: [ "ghcr.io/${{ github.repository_owner }}" ]
         variant:
@@ -142,10 +135,10 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
-        docker manifest create ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }} \
-          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-linux-${{ matrix.variant }} \
-          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-windows-2022-${{ matrix.variant }} \
-          ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-windows-2025-${{ matrix.variant }}
+        docker manifest create ${{ matrix.registry-repo }}/arm:${{ matrix.version }}-${{ matrix.variant }} \
+          ${{ matrix.registry-repo }}/arm:${{ matrix.version }}-linux-${{ matrix.variant }} \
+          ${{ matrix.registry-repo }}/arm:${{ matrix.version }}-windows-2022-${{ matrix.variant }} \
+          ${{ matrix.registry-repo }}/arm:${{ matrix.version }}-windows-2025-${{ matrix.variant }}
     - name: Push the manifest
       run: |
-        docker manifest push ${{ matrix.registry-repo }}/${{ matrix.target }}:${{ matrix.version }}-${{ matrix.variant }}
+        docker manifest push ${{ matrix.registry-repo }}/arm:${{ matrix.version }}-${{ matrix.variant }}
