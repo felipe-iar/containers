@@ -21,7 +21,7 @@ RUN `
     $latestCMake = Invoke-RestMethod -Uri "https://api.github.com/repos/kitware/cmake/releases/latest"; `
     $downloadURL = ($latestCMake.assets | Where-Object { $_.name -like 'cmake-*-windows-x86_64.zip' }).browser_download_url; `
     $fileName = ($latestCmake.assets | Where-Object { $_.name -like 'cmake-*-windows-x86_64.zip' }).name; `
-    $baseDir = (Split-Path -Path $fileName -Leaf); `
+    $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools"; `
     Add-Content -Path "C:\Tools\_path-cmake.txt" -NoNewLine -Value "C:\",$baseDir,"\bin;"
@@ -31,7 +31,7 @@ RUN `
     $latestGit4W = Invoke-RestMethod -Uri "https://api.github.com/repos/git-for-windows/git/releases/latest"; `
     $downloadURL = ($latestGit4W.assets | Where-Object { $_.name -like 'MinGit-*-busybox-64-bit.zip' }).browser_download_url; `
     $fileName = ($latestGit4W.assets | Where-Object { $_.name -like 'MinGit-*-busybox-64-bit.zip' }).name; `
-    $baseDir = (Split-Path -Path $fileName -Leaf); `
+    $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools\$baseDir"; `
     Add-Content -Path "C:\Tools\_path-git.txt" -NoNewLine -Value "C:\",$baseDir,"\cmd;"
@@ -41,7 +41,7 @@ RUN `
     $latestNinja = Invoke-RestMethod -Uri "https://api.github.com/repos/ninja-build/ninja/releases/latest"; `
     $downloadURL = ($latestNinja.assets | Where-Object { $_.name -eq 'ninja-win.zip' }).browser_download_url; `
     $fileName = ($latestNinja.assets | Where-Object { $_.name -eq 'ninja-win.zip' }).name; `
-    $baseDir = (Split-Path -Path $fileName -Leaf); `
+    $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools\$baseDir"; `
     Add-Content -Path "C:\Tools\_path-ninja.txt" -NoNewLine -Value "C:\",$baseDir,";"
