@@ -59,7 +59,7 @@ RUN `
     $re = [regex]::new('href="(https://.*\.exe)"'); `
     $latestLMSC = $re.Match((Invoke-WebRequest 'https://updates.iar.com/?product=LMSCDAEMON&version=1.14' -UseBasicParsing).Content).Groups[1].Value; `
     $fileName = (Split-Path -Path $latestLMSC -Leaf); `
-    Invoke-WebRequest -Uri $latestLMSC -OutFile $fileName -UseBasicParsing; `
+    Invoke-WebRequest -Uri "$latestLMSC" -OutFile "$fileName" -UseBasicParsing; `
     Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/DIR=C:\Tools\iar" -wait; `
     Add-Content -Path 'C:\Tools\_path-lmsc.txt' -NoNewLine -Value 'C:\iar\lmsc'
 
