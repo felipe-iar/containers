@@ -56,7 +56,7 @@ RUN `
 # Install the IAR LMSC Tools
 RUN `
     $re = [regex]::new('href="(https://.*\.exe)"'); `
-    $latestLMSC = $re.Match((Invoke-WebRequest 'https://updates.iar.com/?product=LMSCDAEMON').Content).Groups[1].Value; `
+    $latestLMSC = $re.Match((Invoke-WebRequest 'https://updates.iar.com/?product=LMSCDAEMON&version=1.14').Content).Groups[1].Value; `
     $fileName = (Split-Path -Path $latestLMSC -Leaf); `
     Invoke-WebRequest -Uri $latestLMSC -OutFile $fileName; `
     Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT,"/SUPPRESSMSGBOXES","/DIR=C:\Tools\iar" -wait; `
