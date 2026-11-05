@@ -23,8 +23,8 @@ RUN `
     $fileName = ($latestCmake.assets | Where-Object { $_.name -like 'cmake-*-windows-x86_64.zip' }).name; `
     $baseDir = (Split-Path -Path $fileName -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
-    Expand-Archive -Path "$fileName" -DestinationPath "C:/Tools"; `
-    Add-Content -Path "C:\Tools\_path-cmake.txt" -NoNewLine -Value "C:\",$baseDir,"\bin"
+    Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools"; `
+    Add-Content -Path "C:\Tools\_path-cmake.txt" -NoNewLine -Value "C:\",$baseDir,"\bin;"
 
 # Install Latest Git
 RUN `
@@ -33,8 +33,8 @@ RUN `
     $fileName = ($latestGit4W.assets | Where-Object { $_.name -like 'MinGit-*-busybox-64-bit.zip' }).name; `
     $baseDir = (Split-Path -Path $fileName -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
-    Expand-Archive -Path "$fileName" -DestinationPath "C:/Tools/$baseDir"; `
-    Add-Content -Path "C:\Tools\_path-git.txt" -NoNewLine -Value "C:\",$baseDir,"\cmd"
+    Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools\$baseDir"; `
+    Add-Content -Path "C:\Tools\_path-git.txt" -NoNewLine -Value "C:\",$baseDir,"\cmd;"
 
 # Install Latest Ninja
 RUN `
@@ -43,8 +43,8 @@ RUN `
     $fileName = ($latestNinja.assets | Where-Object { $_.name -eq 'ninja-win.zip' }).name; `
     $baseDir = (Split-Path -Path $fileName -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
-    Expand-Archive -Path "$fileName" -DestinationPath "C:/Tools/$baseDir"; `
-    Add-Content -Path "C:\Tools\_path-ninja.txt" -NoNewLine -Value "C:\",$baseDir
+    Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools\$baseDir"; `
+    Add-Content -Path "C:\Tools\_path-ninja.txt" -NoNewLine -Value "C:\",$baseDir,";"
 
 # Install the IAR Build Tools
 ADD https://github.com/iarsystems/arm/releases/download/${VERSION}/cxarm-${VERSION}-windows-x86_64-minimal.zip cxarm.zip
