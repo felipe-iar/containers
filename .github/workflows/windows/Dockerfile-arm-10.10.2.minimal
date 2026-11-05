@@ -1,8 +1,10 @@
 # escape=`
+
+ARG WINVER=2025
+
 # Use a recent Server Core LTSC image
 FROM mcr.microsoft.com/windows/servercore:ltsc${WINVER} as build
 
-ARG WINVER=2022
 ARG VERSION=10.10.2
 
 LABEL org.opencontainers.image.description="IAR Build Tools for Arm (CX)"
