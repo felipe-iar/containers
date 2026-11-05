@@ -51,7 +51,8 @@ RUN `
 ADD https://github.com/iarsystems/arm/releases/download/${VERSION}/cxarm-${VERSION}-windows-x86_64-minimal.zip cxarm.zip
 RUN `
     Expand-Archive "cxarm.zip" -DestinationPath "C:\Tools\iar"; `
-    Add-Content -Path 'C:\Tools\_path-ibt.txt' -NoNewLine -Value "C:\iar\cxarm-${env:VERSION}\arm\bin;C:\iar\cxarm-${env:VERSION}\common\bin"
+    Add-Content -Path 'C:\Tools\_path-arm.txt' -NoNewLine -Value "C:\iar\cxarm-${env:VERSION}\arm\bin"; `
+    Add-Content -Path 'C:\Tools\_path-common.txt' -NoNewLine -Value "C:\iar\cxarm-${env:VERSION}\common\bin"
 
 # Install the IAR LMSC Tools
 RUN `
