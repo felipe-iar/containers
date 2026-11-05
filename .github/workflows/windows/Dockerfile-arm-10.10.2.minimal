@@ -24,7 +24,7 @@ RUN `
     $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools"; `
-    Add-Content -Path "C:\Tools\_path-cmake.txt" -NoNewLine -Value "C:\",$baseDir,"\bin;"
+    Add-Content -Path 'C:\Tools\_path-cmake.txt' -NoNewLine -Value ("C:\"+$baseDir+"\bin")
 
 # Install Latest Git
 RUN `
@@ -34,7 +34,7 @@ RUN `
     $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools\$baseDir"; `
-    Add-Content -Path "C:\Tools\_path-git.txt" -NoNewLine -Value "C:\",$baseDir,"\cmd;"
+    Add-Content -Path 'C:\Tools\_path-git.txt' -NoNewLine -Value ("C:\"+$baseDir+"\cmd")
 
 # Install Latest Ninja
 RUN `
@@ -44,13 +44,13 @@ RUN `
     $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools\$baseDir"; `
-    Add-Content -Path "C:\Tools\_path-ninja.txt" -NoNewLine -Value "C:\",$baseDir,";"
+    Add-Content -Path 'C:\Tools\_path-ninja.txt' -NoNewLine -Value ("C:\"+$baseDir)
 
 # Install the IAR Build Tools
 ADD https://github.com/iarsystems/arm/releases/download/${VERSION}/cxarm-${VERSION}-windows-x86_64-minimal.zip cxarm.zip
 RUN `
     Expand-Archive "cxarm.zip" -DestinationPath "C:\Tools\iar"; `
-    Add-Content -Path "C:\Tools\_path-ibt.txt" -NoNewLine -Value "C:\iar\cxarm-${VERSION}\arm\bin;C:\iar\cxarm-${VERSION}\common\bin"
+    Add-Content -Path 'C:\Tools\_path-ibt.txt' -NoNewLine -Value "C:\iar\cxarm-${VERSION}\arm\bin;C:\iar\cxarm-${VERSION}\common\bin"
 
 # Install the IAR LMSC Tools
 RUN `
@@ -59,7 +59,7 @@ RUN `
     $fileName = (Split-Path -Path $latestLMSC -Leaf); `
     Invoke-WebRequest -Uri $latestLMSC -OutFile $fileName; `
     Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT,"/SUPPRESSMSGBOXES","/DIR=C:/Tools/iar" -wait; `
-    Add-Content -Path "C:\Tools\_path-lmsc.txt" -NoNewLine -Value "C:\iar\lmsc"
+    Add-Content -Path 'C:\Tools\_path-lmsc.txt' -NoNewLine -Value 'C:\iar\lmsc'
 
 
 
