@@ -23,6 +23,7 @@ RUN `
     $fileName = ($latestCmake.assets | Where-Object { $_.name -like 'cmake-*-windows-x86_64.zip' }).name; `
     $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
+    mkdir 'C:\Tools\; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools"; `
     Add-Content -Path 'C:\Tools\_path-cmake.txt' -NoNewLine -Value ("C:\"+$baseDir+"\bin")
 
