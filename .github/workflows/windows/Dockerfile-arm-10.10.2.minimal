@@ -23,7 +23,7 @@ RUN `
     $fileName = ($latestCmake.assets | Where-Object { $_.name -like 'cmake-*-windows-x86_64.zip' }).name; `
     $baseDir = (Split-Path -Path "$fileName" -Leaf); `
     Invoke-WebRequest -Uri "$downloadURL" -OutFile "$fileName"; `
-    mkdir 'C:\Tools\'; `
+    New-Item -ItemType Directory -Path "C:\Tools\iar" -Force | Out-Null; `
     Expand-Archive -Path "$fileName" -DestinationPath "C:\Tools"; `
     Add-Content -Path 'C:\Tools\_path-cmake.txt' -NoNewLine -Value ('C:\'+$baseDir+'\bin')
 
@@ -50,7 +50,6 @@ RUN `
 # Install the IAR Build Tools
 ADD https://github.com/iarsystems/arm/releases/download/${VERSION}/cxarm-${VERSION}-windows-x86_64-minimal.zip cxarm.zip
 RUN `
-    mkdir 'C:\Tools\iar'; `
     Expand-Archive "cxarm.zip" -DestinationPath "C:\Tools\iar"; `
     Add-Content -Path 'C:\Tools\_path-ibt.txt' -NoNewLine -Value "C:\iar\cxarm-${VERSION}\arm\bin;C:\iar\cxarm-${VERSION}\common\bin"
 
