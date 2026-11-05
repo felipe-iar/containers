@@ -60,7 +60,7 @@ RUN `
     $latestLMSC = $re.Match((Invoke-WebRequest 'https://updates.iar.com/?product=LMSCDAEMON&version=1.14').Content).Groups[1].Value; `
     $fileName = (Split-Path -Path $latestLMSC -Leaf); `
     Invoke-WebRequest -Uri $latestLMSC -OutFile $fileName; `
-    Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT,"/SUPPRESSMSGBOXES","/DIR=C:\Tools\iar" -wait; `
+    Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/DIR=C:\Tools\iar" -wait; `
     Add-Content -Path 'C:\Tools\_path-lmsc.txt' -NoNewLine -Value 'C:\iar\lmsc'
 
 
