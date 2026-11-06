@@ -68,7 +68,7 @@ RUN `
 # Nanoserver offers a "lightweight" option for Windows container images
 FROM mcr.microsoft.com/windows/nanoserver:ltsc${WINVER}
 
-COPY --from=build ["C:\Tools", "C:\"]
+COPY --from=build ["C:/Tools", "C:/"]
 
 RUN dir C:\ /b
 
