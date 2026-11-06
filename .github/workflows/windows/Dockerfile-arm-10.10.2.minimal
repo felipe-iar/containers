@@ -63,17 +63,18 @@ RUN `
     Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/DIR=C:\Tools\iar" -wait; `
     Add-Content -Path 'C:\Tools\_path-lmsc.txt' -NoNewLine -Value 'C:\iar\lmsc'
 
-
+RUN `
+    Remove-Item *.zip -Force
 
 # Nanoserver offers a "lightweight" option for Windows container images
 FROM mcr.microsoft.com/windows/nanoserver:ltsc${WINVER}
 
-COPY --from=build ["C:/Tools", "C:/"]
+COPY --from=build ["C:/Tools/", "C:/"]
 
 RUN dir C:\ /b
 
 # Set PATH from C:\_path.txt
-RUN for /f %i in (C:\_path*.txt) do setx /M PATH "%PATH%;%i"
+RUN for /f %i in C:\_path-*.txt do setx /M PATH "%PATH%;%i"
 
 # Set the work directory
 WORKDIR "C:/workdir"
