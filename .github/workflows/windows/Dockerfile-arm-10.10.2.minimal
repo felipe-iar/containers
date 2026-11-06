@@ -68,9 +68,11 @@ RUN `
 # Nanoserver offers a "lightweight" option for Windows container images
 FROM mcr.microsoft.com/windows/nanoserver:ltsc${WINVER}
 
-COPY --from=build ["C:/Tools", "C:/"]
+COPY --from=build ["C:\Tools", "C:\"]
 
-# Set PATH from C:/_path.txt
+RUN dir C:\ /b
+
+# Set PATH from C:\_path.txt
 RUN for /f %i in (C:\_path*.txt) do setx /M PATH "%PATH%;%i"
 
 # Set the work directory
