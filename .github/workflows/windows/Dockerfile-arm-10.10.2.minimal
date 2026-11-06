@@ -56,9 +56,8 @@ RUN `
 
 # Install the IAR LMSC Tools
 RUN `
-    $re = [regex]::new('href="(https://.*\.exe)"'); `
-    $latestLMSC = $re.Match((Invoke-WebRequest 'https://updates.iar.com/?product=LMSCDAEMON&version=1.14' -UseBasicParsing).Content).Groups[1].Value; `
-    Write-Host "The latest LMSC: $latestLMSC"; `
+    $latestLMSC = $re.Match((Invoke-WebRequest 'https://updates.iar.com/?product=LMSCDAEMON&version=1.14' -UseBasicParsing).Links | `
+      Where-Object { $_.href -like '*.exe' } | Select-Object -ExpandProperty href; `
     $fileName = (Split-Path -Path "$latestLMSC" -Leaf); `
     Invoke-WebRequest -Uri "$latestLMSC" -OutFile "$fileName" -UseBasicParsing; `
     Start-Process -FilePath "$fileName" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/DIR=C:\Tools\iar" -wait; `
