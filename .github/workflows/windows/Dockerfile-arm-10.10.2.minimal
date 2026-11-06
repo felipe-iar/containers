@@ -74,7 +74,7 @@ COPY --from=build ["C:/Tools/", "C:/"]
 RUN dir C:\ /b
 
 # Set PATH from C:\_path.txt
-RUN for /f %i in C:\_path-*.txt do setx /M PATH "%PATH%;%i"
+RUN for %f in (C:\_path-*.txt) do for /f "delims=" %i in %f do setx /M PATH "%PATH%;%i"
 
 # Set the work directory
 WORKDIR "C:/workdir"
