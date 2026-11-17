@@ -23,6 +23,7 @@ HOME=/workdir
 # Linux-specific dependencies and conveniences
 RUN apt-get update \
 && apt-get install -y --no-install-recommends \
+7zip \
 ca-certificates \
 curl \
 git \
