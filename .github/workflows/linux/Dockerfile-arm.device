@@ -20,6 +20,6 @@ RUN wget -qO- $(curl -s https://api.github.com/repos/iarsystems/arm/releases/tag
     | sort -t/ -k4); do \
     if [ $i ]; then \
       curl -sO $i; \
-      unzip -oq $(basename $i) -d /opt/iar/cxarm/; \
+      unzip -o $(basename $i) -d /opt/iar/cxarm/; \
     fi; \
   done
