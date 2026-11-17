@@ -13,4 +13,8 @@ ARG VARIANT
 # Intall Device support
 RUN wget -qO- $(curl -s https://api.github.com/repos/iarsystems/arm/releases/tags/${VERSION} \
     | jq -r --arg PAT "device-support-${VARIANT}.*\\.bz2" '.assets[] | select(.name | test($PAT)) | .browser_download_url') \
-    | tar -I lbzip2 -x -C '/opt/iar'
+    | tar -I lbzip2 -x -C '/opt/iar' \
+&& for i in $(curl -s "https://updates.iar.com/?product=CXARM&version=${VERSION}" \
+    | grep -Po '(?<=href=")[^"]*(?=")' \
+    | grep -i "^https://.*${VARIANT}.*zip" \
+    | sort -t/ -k4); do curl -sO $i; unzip -oq $(basename $i) -d /opt/iar/cxarm/; done
